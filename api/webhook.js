@@ -52,7 +52,7 @@ async function replyMessage(replyToken, messages) {
 
 function statusCard(title, subtitle, color) {
   const bubble = {
-    type: "bubble", size: "kilo",
+    type: "bubble", size: "mega",
     body: {
       type: "box", layout: "vertical", paddingAll: "20px", spacing: "md",
       contents: [
@@ -74,7 +74,7 @@ function statusCard(title, subtitle, color) {
 
 function draftCard(title, subtitle) {
   const bubble = {
-    type: "bubble", size: "kilo",
+    type: "bubble", size: "mega",
     body: {
       type: "box", layout: "vertical", paddingAll: "20px", spacing: "md",
       contents: [
@@ -456,7 +456,7 @@ async function handleEvent(event) {
       const bubbles = todos.map((todo, i) => {
         const imageUrl = images[i];
         return {
-          type: "bubble", size: "kilo",
+          type: "bubble", size: "mega",
           ...(imageUrl ? {
             hero: {
               type: "image", url: imageUrl,
@@ -481,20 +481,25 @@ async function handleEvent(event) {
             ],
           },
           footer: {
-            type: "box", layout: "horizontal", spacing: "sm", paddingAll: "8px",
+            type: "box", layout: "vertical", spacing: "sm", paddingAll: "12px",
             contents: [
               {
-                type: "button", style: "link", color: COLORS.success, height: "sm", flex: 1,
+                type: "button", style: "primary", color: COLORS.success, height: "sm",
                 action: { type: "postback", label: "✓ 完成", data: `action=done&id=${todo.id}`, displayText: "✓ 完成" },
               },
               {
-                type: "button", style: "link", color: COLORS.primary, height: "sm", flex: 1,
-                action: { type: "postback", label: "✎ 編輯", data: `action=edit&id=${todo.id}`, displayText: "✎ 進入編輯" },
-              },
-              {
-                type: "button", style: "link", color: COLORS.muted, height: "sm", flex: 1,
-                action: { type: "postback", label: "✕ 刪除", data: `action=delete&id=${todo.id}`, displayText: "✕ 刪除" },
-              },
+                type: "box", layout: "horizontal", spacing: "sm",
+                contents: [
+                  {
+                    type: "button", style: "secondary", color: COLORS.primary, height: "sm", flex: 1,
+                    action: { type: "postback", label: "✎ 編輯", data: `action=edit&id=${todo.id}`, displayText: "✎ 進入編輯" },
+                  },
+                  {
+                    type: "button", style: "secondary", color: COLORS.error, height: "sm", flex: 1,
+                    action: { type: "postback", label: "✕ 刪除", data: `action=delete&id=${todo.id}`, displayText: "✕ 刪除" },
+                  },
+                ]
+              }
             ],
           },
         };
@@ -547,7 +552,7 @@ async function handleEvent(event) {
     // /help
     if (text === "/help") {
       const makeHelpBubble = (color, emoji, sectionTitle, rows) => ({
-        type: "bubble", size: "kilo",
+        type: "bubble", size: "mega",
         body: {
           type: "box", layout: "vertical", paddingAll: "20px", spacing: "md",
           contents: [
