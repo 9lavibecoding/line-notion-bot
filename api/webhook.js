@@ -461,19 +461,19 @@ async function handleEvent(event) {
             type: "image",
             url: imageUrl,
             size: "full",
-            aspectRatio: "20:13",
+            aspectRatio: "25:15",
             aspectMode: "cover"
           },
           body: {
             type: "box",
             layout: "vertical",
-            paddingAll: "20px",
+            paddingAll: "14px",
             contents: [
               {
                 type: "text",
                 text: `${i + 1}. ${todo.title}`,
                 weight: "bold",
-                size: "xl",
+                size: "md",
                 wrap: true,
                 color: "#111827"
               }
@@ -482,8 +482,8 @@ async function handleEvent(event) {
           footer: {
             type: "box",
             layout: "vertical",
-            spacing: "md",
-            paddingAll: "16px",
+            spacing: "sm",
+            paddingAll: "10px",
             contents: [
               {
                 type: "button",
