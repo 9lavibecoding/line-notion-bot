@@ -488,6 +488,10 @@ async function handleEvent(event) {
                 action: { type: "postback", label: "✓ 完成", data: `action=done&id=${todo.id}`, displayText: "✓ 完成" },
               },
               {
+                type: "button", style: "secondary", color: COLORS.primary, height: "sm", flex: 1,
+                action: { type: "postback", label: "✎ 編輯", data: `action=edit&id=${todo.id}`, displayText: "✎ 進入編輯" },
+              },
+              {
                 type: "button", style: "secondary", height: "sm", flex: 1,
                 action: { type: "postback", label: "✕ 刪除", data: `action=delete&id=${todo.id}`, displayText: "✕ 刪除" },
               },
@@ -689,6 +693,17 @@ async function handleEvent(event) {
       ]);
       const title = page.properties["Title"]?.title?.[0]?.plain_text || "（無標題）";
       return replyMessage(replyToken, statusCard("已刪除", title, COLORS.warning));
+    }
+
+    if (action === "edit") {
+      const [existingDraft, existingEdit] = await Promise.all([getDraft(userId), getEditSession(userId)]);
+      if (existingDraft || existingEdit) {
+        return replyMessage(replyToken, statusCard("目前有進行中的操作", "請先 /save 或 /cancel 完成後再編輯", COLORS.warning));
+      }
+      const page = await notion.pages.retrieve({ page_id: pageId });
+      const title = page.properties["Title"]?.title?.[0]?.plain_text || "（無標題）";
+      await createEditSession(userId, pageId);
+      return replyMessage(replyToken, draftCard("進入編輯模式", `📝 ${title}\n\n請直接傳送想追加的文字、圖片或日期。\n完成後請按儲存，或輸入 /save`));
     }
   }
 
