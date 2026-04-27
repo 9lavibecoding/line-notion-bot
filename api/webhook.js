@@ -74,27 +74,31 @@ function statusCard(title, subtitle, color) {
 
 function draftCard(title, subtitle) {
   const bubble = {
-    type: "bubble", size: "mega",
-    header: {
-      type: "box", layout: "vertical", backgroundColor: COLORS.primary, paddingAll: "12px",
-      contents: [{ type: "text", text: "📝 編輯模式 / 收集中", size: "sm", weight: "bold", color: "#FFFFFF" }]
-    },
+    type: "bubble", size: "kilo",
     body: {
       type: "box", layout: "vertical", paddingAll: "20px", spacing: "md",
       contents: [
+        {
+          type: "box", layout: "horizontal", alignItems: "center", spacing: "sm",
+          contents: [
+            { type: "text", text: "📝", size: "sm", flex: 0 },
+            { type: "text", text: "編輯模式 / 收集中", size: "sm", weight: "bold", color: COLORS.textDark },
+          ]
+        },
+        { type: "separator", color: "#EAEAEA", margin: "md" },
         { type: "text", text: title, weight: "bold", size: "md", color: COLORS.textDark, wrap: true },
         { type: "text", text: subtitle, size: "sm", color: COLORS.textLight, wrap: true },
       ],
     },
     footer: {
-      type: "box", layout: "horizontal", spacing: "sm", paddingAll: "12px",
+      type: "box", layout: "horizontal", spacing: "sm", paddingAll: "8px",
       contents: [
         {
-          type: "button", style: "primary", color: COLORS.success, height: "sm", flex: 1,
+          type: "button", style: "link", color: COLORS.success, height: "sm", flex: 1,
           action: { type: "message", label: "💾 儲存", text: "/save" },
         },
         {
-          type: "button", style: "secondary", color: COLORS.muted, height: "sm", flex: 1,
+          type: "button", style: "link", color: COLORS.muted, height: "sm", flex: 1,
           action: { type: "message", label: "✕ 取消", text: "/cancel" },
         },
       ],
@@ -460,42 +464,36 @@ async function handleEvent(event) {
             },
           } : {}),
           body: {
-            type: "box", layout: "vertical", paddingAll: "16px", spacing: "sm",
+            type: "box", layout: "vertical", paddingAll: "20px", spacing: "md",
             contents: [
               {
-                type: "box", layout: "horizontal", alignItems: "center", spacing: "sm",
+                type: "box", layout: "horizontal", alignItems: "flex-start", spacing: "md",
                 contents: [
                   {
-                    type: "box", layout: "vertical", width: "20px", height: "20px",
-                    cornerRadius: "10px", backgroundColor: COLORS.primary, flex: 0,
+                    type: "box", layout: "vertical", width: "24px", height: "24px",
+                    cornerRadius: "12px", backgroundColor: "#F1F1EF", flex: 0,
                     justifyContent: "center", alignItems: "center",
-                    contents: [{ type: "text", text: `${i + 1}`, size: "xxs", color: "#FFFFFF", align: "center" }],
+                    contents: [{ type: "text", text: `${i + 1}`, size: "xs", weight: "bold", color: COLORS.textLight, align: "center" }],
                   },
-                  { type: "text", text: todo.title, size: "sm", color: COLORS.textDark, wrap: true, flex: 1 },
+                  { type: "text", text: todo.title, size: "md", weight: "bold", color: COLORS.textDark, wrap: true, flex: 1, margin: "xs" },
                 ],
               },
             ],
           },
-          styles: { footer: { separator: true } },
           footer: {
-            type: "box", layout: "vertical", spacing: "sm", paddingAll: "12px",
+            type: "box", layout: "horizontal", spacing: "sm", paddingAll: "8px",
             contents: [
               {
-                type: "button", style: "primary", color: COLORS.success, height: "sm",
+                type: "button", style: "link", color: COLORS.success, height: "sm", flex: 1,
                 action: { type: "postback", label: "✓ 完成", data: `action=done&id=${todo.id}`, displayText: "✓ 完成" },
               },
               {
-                type: "box", layout: "horizontal", spacing: "sm",
-                contents: [
-                  {
-                    type: "button", style: "secondary", color: COLORS.primary, height: "sm", flex: 1,
-                    action: { type: "postback", label: "✎ 編輯", data: `action=edit&id=${todo.id}`, displayText: "✎ 進入編輯" },
-                  },
-                  {
-                    type: "button", style: "secondary", height: "sm", flex: 1,
-                    action: { type: "postback", label: "✕ 刪除", data: `action=delete&id=${todo.id}`, displayText: "✕ 刪除" },
-                  },
-                ],
+                type: "button", style: "link", color: COLORS.primary, height: "sm", flex: 1,
+                action: { type: "postback", label: "✎ 編輯", data: `action=edit&id=${todo.id}`, displayText: "✎ 進入編輯" },
+              },
+              {
+                type: "button", style: "link", color: COLORS.muted, height: "sm", flex: 1,
+                action: { type: "postback", label: "✕ 刪除", data: `action=delete&id=${todo.id}`, displayText: "✕ 刪除" },
               },
             ],
           },
@@ -549,19 +547,20 @@ async function handleEvent(event) {
     // /help
     if (text === "/help") {
       const makeHelpBubble = (color, emoji, sectionTitle, rows) => ({
-        type: "bubble", size: "mega",
+        type: "bubble", size: "kilo",
         body: {
-          type: "box", layout: "vertical", paddingAll: "0px",
+          type: "box", layout: "vertical", paddingAll: "20px", spacing: "md",
           contents: [
             {
-              type: "box", layout: "vertical", backgroundColor: color, paddingAll: "20px",
+              type: "box", layout: "horizontal", alignItems: "center", spacing: "sm",
               contents: [
-                { type: "text", text: emoji, size: "xxl" },
-                { type: "text", text: sectionTitle, size: "xl", weight: "bold", color: "#FFFFFF", margin: "sm" },
+                { type: "text", text: emoji, size: "xl", flex: 0 },
+                { type: "text", text: sectionTitle, size: "lg", weight: "bold", color: COLORS.textDark },
               ],
             },
+            { type: "separator", color: "#EAEAEA", margin: "md" },
             {
-              type: "box", layout: "vertical", paddingAll: "16px", spacing: "md",
+              type: "box", layout: "vertical", spacing: "md",
               contents: rows.map(([cmd, desc]) => ({
                 type: "box", layout: "horizontal", spacing: "md",
                 contents: [
