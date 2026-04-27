@@ -1,0 +1,9 @@
+{
+  "name": "line-notion-bot",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@line/bot-sdk": "^9.6.0",
+    "@notionhq/client": "^2.2.15"
+  }
+}
