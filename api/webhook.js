@@ -9,14 +9,14 @@ const notion = new NotionClient({ auth: NOTION_API_KEY });
 
 // --- Line API Helpers ---
 const COLORS = {
-  primary: "#2383E2", // Notion Blue
-  success: "#2EA169", // Notion Green
-  error: "#EB5757",   // Notion Red
-  warning: "#D9730D", // Notion Orange
-  muted: "#9B9A97",   // Notion Gray
+  primary: "#4B5563", // Tailwind Gray-600
+  success: "#374151", // Tailwind Gray-700
+  error: "#9CA3AF",   // Tailwind Gray-400
+  warning: "#D1D5DB", // Tailwind Gray-300
+  muted: "#9CA3AF",
   bg: "#FFFFFF",
-  textDark: "#37352F", // Notion Dark
-  textLight: "#787774", // Notion Light
+  textDark: "#111827", // Tailwind Gray-900
+  textLight: "#6B7280", // Tailwind Gray-500
 };
 
 async function replyMessage(replyToken, messages) {
@@ -481,25 +481,20 @@ async function handleEvent(event) {
             ],
           },
           footer: {
-            type: "box", layout: "vertical", spacing: "sm", paddingAll: "12px",
+            type: "box", layout: "horizontal", spacing: "sm", paddingAll: "12px",
             contents: [
               {
-                type: "button", style: "primary", color: COLORS.success, height: "sm",
+                type: "button", style: "secondary", color: COLORS.textDark, height: "sm", flex: 2,
                 action: { type: "postback", label: "✓ 完成", data: `action=done&id=${todo.id}`, displayText: "✓ 完成" },
               },
               {
-                type: "box", layout: "horizontal", spacing: "sm",
-                contents: [
-                  {
-                    type: "button", style: "secondary", color: COLORS.primary, height: "sm", flex: 1,
-                    action: { type: "postback", label: "✎ 編輯", data: `action=edit&id=${todo.id}`, displayText: "✎ 進入編輯" },
-                  },
-                  {
-                    type: "button", style: "secondary", color: COLORS.error, height: "sm", flex: 1,
-                    action: { type: "postback", label: "✕ 刪除", data: `action=delete&id=${todo.id}`, displayText: "✕ 刪除" },
-                  },
-                ]
-              }
+                type: "button", style: "link", color: COLORS.textLight, height: "sm", flex: 1,
+                action: { type: "postback", label: "✎ 編輯", data: `action=edit&id=${todo.id}`, displayText: "✎ 進入編輯" },
+              },
+              {
+                type: "button", style: "link", color: COLORS.error, height: "sm", flex: 1,
+                action: { type: "postback", label: "✕ 刪除", data: `action=delete&id=${todo.id}`, displayText: "✕ 刪除" },
+              },
             ],
           },
         };
