@@ -9,14 +9,14 @@ const notion = new NotionClient({ auth: NOTION_API_KEY });
 
 // --- Line API Helpers ---
 const COLORS = {
-  primary: "#4A90D9",
-  success: "#27AE60",
-  error: "#E74C3C",
-  warning: "#F39C12",
-  muted: "#888888",
-  bg: "#F7F8FA",
-  textDark: "#1A1A1A",
-  textLight: "#666666",
+  primary: "#2383E2", // Notion Blue
+  success: "#2EA169", // Notion Green
+  error: "#EB5757",   // Notion Red
+  warning: "#D9730D", // Notion Orange
+  muted: "#9B9A97",   // Notion Gray
+  bg: "#FFFFFF",
+  textDark: "#37352F", // Notion Dark
+  textLight: "#787774", // Notion Light
 };
 
 async function replyMessage(replyToken, messages) {
@@ -31,7 +31,18 @@ async function replyMessage(replyToken, messages) {
       "Content-Type": "application/json",
       Authorization: `Bearer ${LINE_CHANNEL_ACCESS_TOKEN}`,
     },
-    body: JSON.stringify({ replyToken, messages }),
+    body: JSON.stringify({ 
+      replyToken, 
+      messages: messages.map(m => ({
+        ...m,
+        quickReply: m.quickReply || {
+          items: [
+            { type: "action", action: { type: "message", label: "📋 查看清單", text: "/list" } },
+            { type: "action", action: { type: "message", label: "💡 使用說明", text: "/help" } }
+          ]
+        }
+      }))
+    }),
   });
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
@@ -41,21 +52,20 @@ async function replyMessage(replyToken, messages) {
 
 function statusCard(title, subtitle, color) {
   const bubble = {
-    type: "bubble", size: "mega",
+    type: "bubble", size: "kilo",
     body: {
-      type: "box", layout: "vertical", paddingAll: "16px",
+      type: "box", layout: "vertical", paddingAll: "20px", spacing: "md",
       contents: [
         {
-          type: "box", layout: "vertical",
-          borderWidth: "2px", borderColor: color,
-          cornerRadius: "8px", paddingAll: "md",
+          type: "box", layout: "horizontal", alignItems: "center", spacing: "sm",
           contents: [
-            { type: "text", text: title, color: color, weight: "bold", size: "md", wrap: true },
-            ...(subtitle ? [{
-              type: "text", text: subtitle, size: "sm", color: COLORS.textLight, wrap: true, margin: "sm",
-            }] : []),
-          ],
+            { type: "box", layout: "vertical", width: "4px", height: "100%", backgroundColor: color, flex: 0, cornerRadius: "2px" },
+            { type: "text", text: title, color: COLORS.textDark, weight: "bold", size: "md", wrap: true, flex: 1 },
+          ]
         },
+        ...(subtitle ? [{
+          type: "text", text: subtitle, size: "sm", color: COLORS.textLight, wrap: true, margin: "md"
+        }] : []),
       ],
     },
   };
@@ -65,40 +75,27 @@ function statusCard(title, subtitle, color) {
 function draftCard(title, subtitle) {
   const bubble = {
     type: "bubble", size: "mega",
+    header: {
+      type: "box", layout: "vertical", backgroundColor: COLORS.primary, paddingAll: "12px",
+      contents: [{ type: "text", text: "📝 編輯模式 / 收集中", size: "sm", weight: "bold", color: "#FFFFFF" }]
+    },
     body: {
-      type: "box", layout: "vertical", paddingAll: "0px",
+      type: "box", layout: "vertical", paddingAll: "20px", spacing: "md",
+      contents: [
+        { type: "text", text: title, weight: "bold", size: "md", color: COLORS.textDark, wrap: true },
+        { type: "text", text: subtitle, size: "sm", color: COLORS.textLight, wrap: true },
+      ],
+    },
+    footer: {
+      type: "box", layout: "horizontal", spacing: "sm", paddingAll: "12px",
       contents: [
         {
-          type: "box", layout: "horizontal", backgroundColor: COLORS.primary,
-          paddingAll: "14px", alignItems: "center",
-          contents: [
-            {
-              type: "box", layout: "vertical", width: "6px", height: "6px",
-              cornerRadius: "3px", backgroundColor: "#FFFFFF", flex: 0,
-            },
-            { type: "text", text: "收集中", size: "xs", weight: "bold", color: "#FFFFFF", margin: "sm", flex: 0 },
-            { type: "filler" },
-            { type: "text", text: title, size: "xs", color: "#C8DEFF", flex: 0 },
-          ],
+          type: "button", style: "primary", color: COLORS.success, height: "sm", flex: 1,
+          action: { type: "message", label: "💾 儲存", text: "/save" },
         },
         {
-          type: "box", layout: "vertical", paddingAll: "16px", backgroundColor: "#F0F6FF",
-          contents: [
-            { type: "text", text: subtitle, size: "sm", color: COLORS.textDark, wrap: true },
-          ],
-        },
-        {
-          type: "box", layout: "horizontal", paddingAll: "12px", spacing: "md", backgroundColor: "#FFFFFF",
-          contents: [
-            {
-              type: "button", style: "primary", color: COLORS.success, height: "sm", flex: 1,
-              action: { type: "message", label: "儲存待辦", text: "/save" },
-            },
-            {
-              type: "button", style: "secondary", height: "sm", flex: 1,
-              action: { type: "message", label: "取消", text: "/cancel" },
-            },
-          ],
+          type: "button", style: "secondary", color: COLORS.muted, height: "sm", flex: 1,
+          action: { type: "message", label: "✕ 取消", text: "/cancel" },
         },
       ],
     },
