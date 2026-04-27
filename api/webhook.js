@@ -454,54 +454,73 @@ async function handleEvent(event) {
       const images = await Promise.all(todos.map(t => getTodoImage(t.id)));
 
       const bubbles = todos.map((todo, i) => {
-        const imageUrl = images[i];
+        const imageUrl = images[i] || "https://images.unsplash.com/photo-1517842645767-c639042777db?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80";
         return {
-          type: "bubble", size: "mega",
-          ...(imageUrl ? {
-            hero: {
-              type: "image", url: imageUrl,
-              size: "full", aspectRatio: "20:13", aspectMode: "cover",
-            },
-          } : {}),
+          type: "bubble",
+          hero: {
+            type: "image",
+            url: imageUrl,
+            size: "full",
+            aspectRatio: "20:13",
+            aspectMode: "cover"
+          },
           body: {
-            type: "box", layout: "vertical", paddingAll: "20px", spacing: "md",
+            type: "box",
+            layout: "vertical",
+            paddingAll: "20px",
             contents: [
               {
-                type: "box", layout: "horizontal", alignItems: "flex-start", spacing: "md",
-                contents: [
-                  {
-                    type: "box", layout: "vertical", width: "24px", height: "24px",
-                    cornerRadius: "12px", backgroundColor: "#F1F1EF", flex: 0,
-                    justifyContent: "center", alignItems: "center",
-                    contents: [{ type: "text", text: `${i + 1}`, size: "xs", weight: "bold", color: COLORS.textLight, align: "center" }],
-                  },
-                  { type: "text", text: todo.title, size: "md", weight: "bold", color: COLORS.textDark, wrap: true, flex: 1, margin: "xs" },
-                ],
-              },
-            ],
+                type: "text",
+                text: `${i + 1}. ${todo.title}`,
+                weight: "bold",
+                size: "xl",
+                wrap: true,
+                color: "#111827"
+              }
+            ]
           },
           footer: {
-            type: "box", layout: "vertical", spacing: "sm", paddingAll: "16px",
+            type: "box",
+            layout: "vertical",
+            spacing: "md",
+            paddingAll: "16px",
             contents: [
               {
-                type: "button", style: "secondary", color: "#E8F5E9", height: "sm",
-                action: { type: "postback", label: "✓ 完成任務", data: `action=done&id=${todo.id}`, displayText: "✓ 完成" },
+                type: "button",
+                style: "link",
+                height: "sm",
+                action: {
+                  type: "postback",
+                  label: "✓ 完成",
+                  data: `action=done&id=${todo.id}`,
+                  displayText: "✓ 完成"
+                }
               },
               {
-                type: "box", layout: "horizontal", spacing: "sm",
-                contents: [
-                  {
-                    type: "button", style: "link", color: "#3B82F6", height: "sm",
-                    action: { type: "postback", label: "✎ 編輯", data: `action=edit&id=${todo.id}`, displayText: "✎ 進入編輯" },
-                  },
-                  {
-                    type: "button", style: "link", color: "#EF4444", height: "sm",
-                    action: { type: "postback", label: "✕ 刪除", data: `action=delete&id=${todo.id}`, displayText: "✕ 刪除" },
-                  },
-                ],
+                type: "button",
+                style: "link",
+                height: "sm",
+                action: {
+                  type: "postback",
+                  label: "✎ 編輯",
+                  data: `action=edit&id=${todo.id}`,
+                  displayText: "✎ 進入編輯"
+                }
               },
-            ],
-          },
+              {
+                type: "button",
+                style: "link",
+                color: "#EF4444",
+                height: "sm",
+                action: {
+                  type: "postback",
+                  label: "✕ 刪除",
+                  data: `action=delete&id=${todo.id}`,
+                  displayText: "✕ 刪除"
+                }
+              }
+            ]
+          }
         };
       });
 
