@@ -481,19 +481,24 @@ async function handleEvent(event) {
           },
           styles: { footer: { separator: true } },
           footer: {
-            type: "box", layout: "horizontal", spacing: "sm", paddingAll: "12px",
+            type: "box", layout: "vertical", spacing: "sm", paddingAll: "12px",
             contents: [
               {
-                type: "button", style: "primary", color: COLORS.success, height: "sm", flex: 1,
+                type: "button", style: "primary", color: COLORS.success, height: "sm",
                 action: { type: "postback", label: "✓ 完成", data: `action=done&id=${todo.id}`, displayText: "✓ 完成" },
               },
               {
-                type: "button", style: "secondary", color: COLORS.primary, height: "sm", flex: 1,
-                action: { type: "postback", label: "✎ 編輯", data: `action=edit&id=${todo.id}`, displayText: "✎ 進入編輯" },
-              },
-              {
-                type: "button", style: "secondary", height: "sm", flex: 1,
-                action: { type: "postback", label: "✕ 刪除", data: `action=delete&id=${todo.id}`, displayText: "✕ 刪除" },
+                type: "box", layout: "horizontal", spacing: "sm",
+                contents: [
+                  {
+                    type: "button", style: "secondary", color: COLORS.primary, height: "sm", flex: 1,
+                    action: { type: "postback", label: "✎ 編輯", data: `action=edit&id=${todo.id}`, displayText: "✎ 進入編輯" },
+                  },
+                  {
+                    type: "button", style: "secondary", height: "sm", flex: 1,
+                    action: { type: "postback", label: "✕ 刪除", data: `action=delete&id=${todo.id}`, displayText: "✕ 刪除" },
+                  },
+                ],
               },
             ],
           },
